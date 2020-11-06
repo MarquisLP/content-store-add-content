@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@brightspace-ui/core": "^1",
+    "@polymer/polymer": "^3.4.1",
     "@webcomponents/webcomponentsjs": "^2",
     "lit-element": "^2"
   }
