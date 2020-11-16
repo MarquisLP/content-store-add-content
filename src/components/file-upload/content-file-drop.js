@@ -42,7 +42,8 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 	async connectedCallback() {
 		super.connectedCallback();
 		this.client = this.requestDependency('content-service-client');
-		this._supportedMimeTypes = await this.client.getSupportedMimeTypes();
+		this._supportedMimeTypes = (await this.client.getSupportedMimeTypes())
+			.filter(x => x.startsWith('video/') || x.startsWith('audio/'));
 	}
 
 	render() {
