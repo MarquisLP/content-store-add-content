@@ -1,4 +1,4 @@
-import { action, decorate, flow, makeObservable, observable } from 'mobx';
+import { action, decorate, flow, observable } from 'mobx';
 import resolveWorkerError from '../util/resolve-worker-error';
 import { S3Uploader } from '../util/s3-uploader';
 import UploadStatus from '../util/upload-status';
@@ -24,30 +24,28 @@ export class Uploader {
 		this.uploadProgress = 0;
 		this.error = '';
 
-		makeObservable(this, {
-			uploadFile: flow
-		});
+		this.uploadFile = flow((function * (file) {
+			/* eslint-disable no-invalid-this */
+			const uploadInfo = {
+				file,
+				progress: 0,
+				extension: file.name.split('.').pop(),
+				err: null
+			};
+
+			try {
+				yield this._uploadWorkflowAsync(uploadInfo);
+			} catch (error) {
+				this.error = resolveWorkerError(error);
+			}
+			/* eslint-enable no-invalid-this */
+		}));
 	}
 
 	reset() {
 		this.uploadStatus = UploadStatus.IDLE;
 		this.uploadProgress = 0;
 		this.error = '';
-	}
-
-	*uploadFile(file) {
-		const uploadInfo = {
-			file,
-			progress: 0,
-			extension: file.name.split('.').pop(),
-			err: null
-		};
-
-		try {
-			yield this._uploadWorkflowAsync(uploadInfo);
-		} catch (error) {
-			this.error = resolveWorkerError(error);
-		}
 	}
 
 	async _monitorProgressAsync({ content, revision, progressCallback }) {
