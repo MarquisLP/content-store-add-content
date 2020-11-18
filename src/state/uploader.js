@@ -33,6 +33,8 @@ export class Uploader {
 				err: null
 			};
 
+			this.uploadStatus = UploadStatus.LOADING;
+
 			try {
 				yield this._uploadWorkflowAsync(uploadInfo);
 			} catch (error) {
@@ -81,8 +83,6 @@ export class Uploader {
 				}
 			);
 
-			this.uploadStatus = UploadStatus.LOADING;
-
 			const s3Uploader = new S3Uploader({
 				file,
 				key: revision.s3Key,
@@ -113,6 +113,7 @@ export class Uploader {
 				}
 			});
 		} catch (error) {
+			this.uploadStatus = UploadStatus.IDLE;
 			this.error = resolveWorkerError(error);
 		}
 	}
