@@ -13,8 +13,50 @@ export default class ContentServiceClient {
 		this.tenantId = tenantId;
 	}
 
+	createContent(body) {
+		return this._fetch({
+			path: `/api/${this.tenantId}/content/`,
+			method: 'POST',
+			body
+		});
+	}
+
+	createRevision(contentId, body) {
+		return this._fetch({
+			path: `/api/${this.tenantId}/content/${contentId}/revisions`,
+			method: 'POST',
+			body
+		});
+	}
+
 	getSupportedMimeTypes() {
 		return this._fetch({ path: '/api/conf/supported-mime-types' });
+	}
+
+	getWorkflowProgress({
+		contentId,
+		revisionId
+	}) {
+		const headers = new Headers();
+
+		// This endpoint is typically polled over and over for new results, so we don't want the user's browser to cache the response.
+		headers.append('pragma', 'no-cache');
+		headers.append('cache-control', 'no-cache');
+
+		return this._fetch({
+			path: `/api/${this.tenantId}/content/${contentId}/revisions/${revisionId}/progress`,
+			headers
+		});
+	}
+
+	processRevision({
+		contentId,
+		revisionId
+	}) {
+		return this._fetch({
+			path: `/api/${this.tenantId}/content/${contentId}/revisions/${revisionId}/process`,
+			method: 'POST'
+		});
 	}
 
 	async _fetch({

@@ -2,6 +2,7 @@ import './src/pages/tabs-container.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import ContentServiceClient from './src/util/content-service-client';
 import { DependencyProvider } from './src/mixins/dependency-provider-mixin';
+import { Uploader } from './src/state/uploader';
 
 class D2lContentStoreAddContent extends DependencyProvider(LitElement) {
 	static get properties() {
@@ -30,6 +31,9 @@ class D2lContentStoreAddContent extends DependencyProvider(LitElement) {
 			tenantId: this.tenantId
 		});
 		this.provideDependency('content-service-client', apiClient);
+
+		const uploader = new Uploader({ apiClient });
+		this.provideDependency('uploader', uploader);
 	}
 
 	render() {
