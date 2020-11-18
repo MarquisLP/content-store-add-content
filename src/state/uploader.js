@@ -50,7 +50,7 @@ export class Uploader {
 		this.error = '';
 	}
 
-	async _monitorProgressAsync({ content, revision, progressCallback }) {
+	async _monitorProgressAsync(content, revision, progressCallback) {
 		try {
 			const progress = await this.apiClient.getWorkflowProgress({
 				contentId: content.id,
