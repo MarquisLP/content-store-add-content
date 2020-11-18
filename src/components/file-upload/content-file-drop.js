@@ -42,21 +42,30 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 	async connectedCallback() {
 		super.connectedCallback();
 		this.client = this.requestDependency('content-service-client');
+		this.uploader = this.requestDependency('uploader');
 		this._supportedMimeTypes = (await this.client.getSupportedMimeTypes())
 			.filter(x => x.startsWith('video/') || x.startsWith('audio/'));
 	}
 
 	render() {
 		return html`
-			<file-drop accept=${this._supportedMimeTypes.join(',')}>
+			<file-drop @filedrop=${this.onFileDrop} accept=${this._supportedMimeTypes.join(',')}>
 				<center>
 					<h2 class="d2l-heading-2">${this.localize('dropAudioVideoFile')}</h2>
 					<p class="d2l-body-standard">${this.localize('or')}</p>
-					<d2l-button>${this.localize('browse')}</d2l-button>
+					<d2l-button @click=${this.onBrowseClick}>${this.localize('browse')}</d2l-button>
 					<p id="file-size-limit" class="d2l-body-small">${this.localize('fileLimit1Gb')}</p>
 				</center>
 			</file-drop>
 		`;
+	}
+
+	onBrowseClick(event) {
+		// TODO: Open file browse dialog.
+	}
+
+	onFileDrop(event) {
+		this.uploader.uploadFile(event._files[0]);
 	}
 }
 
