@@ -59,6 +59,21 @@ export default class ContentServiceClient {
 		});
 	}
 
+	signUploadRequest({
+		fileName,
+		contentType,
+		contentDisposition
+	}) {
+		return this._fetch({
+			path: '/api/s3/sign',
+			query: {
+				fileName,
+				contentType,
+				contentDisposition
+			}
+		});
+	}
+
 	async _fetch({
 		path,
 		method = 'GET',
