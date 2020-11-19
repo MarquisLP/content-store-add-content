@@ -10,6 +10,7 @@ export class UploadAudioVideoTabStore {
 	constructor() {
 		this.status = UploadAudioVideoTabStatus.PROMPT;
 		this.file = null;
+		this.contentTitle = '';
 	}
 
 	confirmUpload() {
@@ -21,8 +22,13 @@ export class UploadAudioVideoTabStore {
 		this.status = UploadAudioVideoTabStatus.PROMPT;
 	}
 
+	setContentTitle(contentTitle) {
+		this.contentTitle = contentTitle;
+	}
+
 	setFile(file) {
 		this.file = file;
+		this.contentTitle = file.name.substring(0, file.name.lastIndexOf('.'));
 		this.status = UploadAudioVideoTabStatus.CONFIRMAITON;
 	}
 }
@@ -32,5 +38,6 @@ decorate(UploadAudioVideoTabStore, {
 	file: observable,
 	confirmUpload: action,
 	discardFile: action,
+	setContentTitle: action,
 	setFile: action
 });

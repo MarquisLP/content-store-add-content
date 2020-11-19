@@ -11,7 +11,7 @@ class UploadConfirmation extends MobxReactionUpdate(DependencyRequester(LitEleme
 	render() {
 		return html`
 			<h1>Skeleton for Upload Confirmation</h1>
-			<p>File: ${this.tabStore.file.name}</p>
+			<p>File: ${this.tabStore.contentTitle}</p>
 		`;
 	}
 }
