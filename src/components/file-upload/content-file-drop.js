@@ -41,8 +41,10 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 
 	async connectedCallback() {
 		super.connectedCallback();
+
+		this.tabStore = this.requestDependency('upload-audio-video-tab-store');
+
 		this.client = this.requestDependency('content-service-client');
-		this.uploader = this.requestDependency('uploader');
 		this._supportedMimeTypes = (await this.client.getSupportedMimeTypes())
 			.filter(x => x.startsWith('video/') || x.startsWith('audio/'));
 	}
@@ -65,7 +67,7 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 	}
 
 	onFileDrop(event) {
-		this.uploader.uploadFile(event._files[0]);
+		this.tabStore.setFile(event._files[0]);
 	}
 }
 
