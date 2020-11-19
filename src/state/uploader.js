@@ -104,7 +104,7 @@ export class Uploader {
 			});
 
 			await this._monitorProgressAsync(content, revision, ({ percentComplete = 0, ready, error }) => {
-				this.progress = 50 + (percentComplete / 2);
+				this.uploadProgress = 50 + (percentComplete / 2);
 				if (error) {
 					this.uploadStatus = UploadStatus.IDLE;
 					this.error = resolveWorkerError(error);
