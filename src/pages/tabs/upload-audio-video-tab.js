@@ -14,7 +14,10 @@ class UploadAudioVideoTab extends LitElement {
 		return {
 			tabStatus: { type: Number },
 			contentTitle: { type: String },
-			errorMessage: { type: String }
+			errorMessage: { type: String },
+			fileName: { type: String },
+			fileSize: { type: Number },
+			fileType: { type: String },
 		};
 	}
 
@@ -23,6 +26,9 @@ class UploadAudioVideoTab extends LitElement {
 		this.tabStatus = TabStatus.PROMPT;
 		this.contentTitle = '';
 		this.errorMessage = '';
+		this.fileName = '';
+		this.fileSize = 0;
+		this.fileType = '';
 	}
 
 	render() {
@@ -30,7 +36,13 @@ class UploadAudioVideoTab extends LitElement {
 			case TabStatus.PROMPT:
 				return html`<content-file-drop error-message=${this.errorMessage} @stage-file-for-upload=${this.onStageFileForUpload} @upload-error=${this.onUploadError}></content-file-drop>`;
 			case TabStatus.CONFIRMAITON:
-				return html`<upload-confirmation content-title=${this.contentTitle} @change-content-title=${this.onChangeContentTitle}></upload-confirmation>`;
+				return html`<upload-confirmation
+					content-title=${this.contentTitle}
+					file-name=${this.fileName}
+					file-size=${this.fileSize}
+					file-type=${this.fileType}
+					@change-content-title=${this.onChangeContentTitle}
+					@discard-staged-file=${this.onDiscardStagedFile}></upload-confirmation>`;
 			case TabStatus.UPLOADING:
 				return html`<upload-progress-indicator></upload-progress-indicator>`;
 		}
@@ -40,12 +52,21 @@ class UploadAudioVideoTab extends LitElement {
 		this.contentTitle = event.detail.contentTitle;
 	}
 
+	onDiscardStagedFile() {
+		this.file = undefined;
+		this.fileName = '';
+		this.fileSize = 0;
+		this.fileType = '';
+		this.contentTitle = '';
+		this.tabStatus = TabStatus.PROMPT;
+	}
+
 	onStageFileForUpload(event) {
 		this.file = event.file;
-
-		const filename = event.detail.file.name;
-		this.contentTitle = filename.substring(0, filename.lastIndexOf('.'));
-
+		this.fileName = event.detail.file.name;
+		this.fileSize = event.detail.file.size;
+		this.fileType = event.detail.file.type;
+		this.contentTitle = this.fileName.substring(0, this.fileName.lastIndexOf('.'));
 		this.tabStatus = TabStatus.CONFIRMAITON;
 	}
 
