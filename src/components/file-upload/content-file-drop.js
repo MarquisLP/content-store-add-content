@@ -1,7 +1,7 @@
 import 'file-drop-element';
 import '@brightspace-ui/core/components/button/button.js';
 import '@brightspace-ui/core/components/colors/colors.js';
-import { bodySmallStyles, bodyStandardStyles, heading2Styles } from '@brightspace-ui/core/components/typography/styles.js';
+import { bodyCompactStyles, bodySmallStyles, bodyStandardStyles, heading2Styles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { DependencyRequester } from '../../mixins/dependency-requester-mixin';
 import { InternalLocalizeMixin } from '../../mixins/internal-localize-mixin';
@@ -15,7 +15,7 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 	}
 
 	static get styles() {
-		return [ bodySmallStyles, bodyStandardStyles, heading2Styles, css`
+		return [ bodySmallStyles, bodyStandardStyles, heading2Styles, bodyCompactStyles, css`
 			file-drop {
 				display: block;
 				border: 2px dashed var(--d2l-color-corundum);
