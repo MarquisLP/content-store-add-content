@@ -1,5 +1,4 @@
 import '@brightspace-ui/core/components/button/button-icon.js';
-import '@brightspace-ui/core/components/icons/icon.js';
 import '@brightspace-ui/core/components/inputs/input-text.js';
 import { css, html, LitElement } from 'lit-element';
 import { bodyCompactStyles } from '@brightspace-ui/core/components/typography/styles.js';
@@ -30,6 +29,7 @@ class UploadConfirmation extends InternalLocalizeMixin(LitElement) {
 				flex-direction: row;
 				justify-content: center;
 				align-items: center;
+				margin-top: 30px;
 			}
 			#staged-file > * {
 				margin: 3px;
@@ -64,7 +64,14 @@ class UploadConfirmation extends InternalLocalizeMixin(LitElement) {
 				<div id="staged-file">
 					<d2l-icon icon="${this.fileType.startsWith('audio') ? 'tier1:file-audio' : 'tier1:file-video'}"></d2l-icon>
 					<p id="file-details" class="d2l-body-compact">${this.fileName} (${(this.fileSize / Math.pow(2, 20)).toFixed(2)} MB)</p>
-					<d2l-button-icon text="Change File" icon="tier1:close-default" @click=${this.onChangeFileClick}></d2l-icon>
+					<d2l-button-icon
+						id="change-file-button"
+						aria-expanded="false"
+						aria-haspopup="false"
+						aria-label=${this.localize('changeFile')}
+						text="${this.localize('remove')} ${this.fileName}"
+						icon="tier1:close-default"
+						@click=${this.onChangeFileClick}></d2l-button-icon>
 				</div>
 			</div>
 		`;

@@ -8,5 +8,7 @@ export const val = {
 	invalidFileType: 'Invalid file type.',
 	fileTooLarge: 'File size is larger than 1 GB.',
 	title: 'Title',
-	titleForUpload: 'Title for your file upload'
+	titleForUpload: 'Title for your file upload',
+	changeFile: 'Change File',
+	remove: 'Remove'
 };
