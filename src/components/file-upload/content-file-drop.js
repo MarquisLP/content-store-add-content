@@ -76,13 +76,6 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 
 	onFileDrop(event) {
 		this.stageFile(event._files);
-		this.dispatchEvent(new CustomEvent('stage-file-for-upload', {
-			detail: {
-				file: event._files[0]
-			},
-			bubbles: true,
-			composed: true
-		}));
 	}
 
 	onFileInputChange(event) {
