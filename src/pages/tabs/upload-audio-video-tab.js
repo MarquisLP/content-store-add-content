@@ -1,7 +1,9 @@
+import '@brightspace-ui/core/components/button/button.js';
 import '../../components/file-upload/content-file-drop.js';
 import '../../components/file-upload/upload-confirmation.js';
 import '../../components/file-upload/upload-progress-indicator.js';
-import { html, LitElement } from 'lit-element';
+import { css, html, LitElement } from 'lit-element';
+import { InternalLocalizeMixin } from '../../mixins/internal-localize-mixin';
 
 const TabStatus = Object.freeze({
 	PROMPT: 0,
@@ -9,7 +11,7 @@ const TabStatus = Object.freeze({
 	UPLOADING: 2
 });
 
-class UploadAudioVideoTab extends LitElement {
+class UploadAudioVideoTab extends InternalLocalizeMixin(LitElement) {
 	static get properties() {
 		return {
 			tabStatus: { type: Number },
@@ -19,6 +21,30 @@ class UploadAudioVideoTab extends LitElement {
 			fileSize: { type: Number },
 			fileType: { type: String },
 		};
+	}
+
+	static get styles() {
+		return css`
+			#tab-container {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				height: 100%;
+			}
+			#tab-content-container {
+				width: 100%;
+				overflow-y: scroll;
+			}
+			#top-level-buttons {
+				display: flex;
+				flex-direction: row;
+				justify-content: flex-start;
+				margin-top: 20px;
+			}
+			#top-level-buttons > * {
+				margin: 5px;
+			}
+		`;
 	}
 
 	constructor() {
@@ -32,20 +58,41 @@ class UploadAudioVideoTab extends LitElement {
 	}
 
 	render() {
+		let tabContent;
 		switch (this.tabStatus) {
 			case TabStatus.PROMPT:
-				return html`<content-file-drop error-message=${this.errorMessage} @stage-file-for-upload=${this.onStageFileForUpload} @upload-error=${this.onUploadError}></content-file-drop>`;
+				tabContent = html`
+					<content-file-drop
+						error-message=${this.errorMessage}
+						@stage-file-for-upload=${this.onStageFileForUpload}
+						@upload-error=${this.onUploadError}></content-file-drop>
+					`;
+				break;
 			case TabStatus.CONFIRMAITON:
-				return html`<upload-confirmation
-					content-title=${this.contentTitle}
-					file-name=${this.fileName}
-					file-size=${this.fileSize}
-					file-type=${this.fileType}
-					@change-content-title=${this.onChangeContentTitle}
-					@discard-staged-file=${this.onDiscardStagedFile}></upload-confirmation>`;
+				tabContent = html`
+					<upload-confirmation
+						content-title=${this.contentTitle}
+						file-name=${this.fileName}
+						file-size=${this.fileSize}
+						file-type=${this.fileType}
+						@change-content-title=${this.onChangeContentTitle}
+						@discard-staged-file=${this.onDiscardStagedFile}></upload-confirmation>
+					`;
+				break;
 			case TabStatus.UPLOADING:
-				return html`<upload-progress-indicator></upload-progress-indicator>`;
+				tabContent = html`
+					<upload-progress-indicator></upload-progress-indicator>
+				`;
 		}
+		return html`<div id="tab-container">
+			<div id="tab-content-container">
+				${tabContent}
+			</div>
+			<div id="top-level-buttons">
+				<d2l-button primary disabled>${this.localize('save')}</d2l-button>
+				<d2l-button>${this.localize('cancel')}</d2l-button>
+			</div>
+		</div>`;
 	}
 
 	onChangeContentTitle(event) {

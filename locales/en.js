@@ -10,5 +10,7 @@ export const val = {
 	title: 'Title',
 	titleForUpload: 'Title for your file upload',
 	changeFile: 'Change File',
-	remove: 'Remove'
+	remove: 'Remove',
+	save: 'Save',
+	cancel: 'Cancel'
 };
