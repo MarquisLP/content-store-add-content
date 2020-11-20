@@ -13,7 +13,8 @@ class UploadAudioVideoTab extends LitElement {
 	static get properties() {
 		return {
 			tabStatus: { type: Number },
-			contentTitle: { type: String }
+			contentTitle: { type: String },
+			errorMessage: { type: String }
 		};
 	}
 
@@ -21,12 +22,13 @@ class UploadAudioVideoTab extends LitElement {
 		super();
 		this.tabStatus = TabStatus.PROMPT;
 		this.contentTitle = '';
+		this.errorMessage = '';
 	}
 
 	render() {
 		switch (this.tabStatus) {
 			case TabStatus.PROMPT:
-				return html`<content-file-drop @stage-file-for-upload=${this.onStageFileForUpload}></content-file-drop>`;
+				return html`<content-file-drop error-message=${this.errorMessage} @stage-file-for-upload=${this.onStageFileForUpload} @upload-error=${this.onUploadError}></content-file-drop>`;
 			case TabStatus.CONFIRMAITON:
 				return html`<upload-confirmation content-title=${this.contentTitle}></upload-confirmation>`;
 			case TabStatus.UPLOADING:
@@ -41,6 +43,11 @@ class UploadAudioVideoTab extends LitElement {
 		this.contentTitle = filename.substring(0, filename.lastIndexOf('.'));
 
 		this.tabStatus = TabStatus.CONFIRMAITON;
+	}
+
+	onUploadError(event) {
+		this.errorMessage = event.detail.message;
+		this.tabStatus = TabStatus.PROMPT;
 	}
 }
 
