@@ -1,17 +1,21 @@
 import { html, LitElement } from 'lit-element';
-import { DependencyRequester } from '../../mixins/dependency-requester-mixin';
-import { MobxReactionUpdate } from '@adobe/lit-mobx';
 
-class UploadConfirmation extends MobxReactionUpdate(DependencyRequester(LitElement)) {
-	async connectedCallback() {
-		super.connectedCallback();
-		this.tabStore = this.requestDependency('upload-audio-video-tab-store');
+class UploadConfirmation extends LitElement {
+	static get properties() {
+		return {
+			contentTitle: { type: String, attribute: 'content-title' }
+		};
+	}
+
+	constructor() {
+		super();
+		this.contentTitle = '';
 	}
 
 	render() {
 		return html`
 			<h1>Skeleton for Upload Confirmation</h1>
-			<p>File: ${this.tabStore.contentTitle}</p>
+			<p>File: ${this.contentTitle}</p>
 		`;
 	}
 }
