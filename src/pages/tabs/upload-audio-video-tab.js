@@ -68,6 +68,7 @@ class UploadAudioVideoTab extends LitElement {
 		this.fileType = event.detail.file.type;
 		this.contentTitle = this.fileName.substring(0, this.fileName.lastIndexOf('.'));
 		this.tabStatus = TabStatus.CONFIRMAITON;
+		this.errorMessage = '';
 	}
 
 	onUploadError(event) {
