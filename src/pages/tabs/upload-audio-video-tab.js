@@ -30,10 +30,14 @@ class UploadAudioVideoTab extends LitElement {
 			case TabStatus.PROMPT:
 				return html`<content-file-drop error-message=${this.errorMessage} @stage-file-for-upload=${this.onStageFileForUpload} @upload-error=${this.onUploadError}></content-file-drop>`;
 			case TabStatus.CONFIRMAITON:
-				return html`<upload-confirmation content-title=${this.contentTitle}></upload-confirmation>`;
+				return html`<upload-confirmation content-title=${this.contentTitle} @change-content-title=${this.onChangeContentTitle}></upload-confirmation>`;
 			case TabStatus.UPLOADING:
 				return html`<upload-progress-indicator></upload-progress-indicator>`;
 		}
+	}
+
+	onChangeContentTitle(event) {
+		this.contentTitle = event.detail.contentTitle;
 	}
 
 	onStageFileForUpload(event) {

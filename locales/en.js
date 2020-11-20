@@ -6,5 +6,7 @@ export const val = {
 	fileLimit1Gb: 'You can upload files up to a maximum of 1 GB.',
 	mayOnlyUpload1File: 'You may only upload 1 file.',
 	invalidFileType: 'Invalid file type.',
-	fileTooLarge: 'File size is larger than 1 GB.'
+	fileTooLarge: 'File size is larger than 1 GB.',
+	title: 'Title',
+	titleForUpload: 'Title for your file upload'
 };

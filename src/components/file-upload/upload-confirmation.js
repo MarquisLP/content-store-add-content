@@ -1,10 +1,20 @@
-import { html, LitElement } from 'lit-element';
+import '@brightspace-ui/core/components/inputs/input-text.js';
+import { css, html, LitElement } from 'lit-element';
+import { InternalLocalizeMixin } from '../../mixins/internal-localize-mixin';
 
-class UploadConfirmation extends LitElement {
+class UploadConfirmation extends InternalLocalizeMixin(LitElement) {
 	static get properties() {
 		return {
 			contentTitle: { type: String, attribute: 'content-title' }
 		};
+	}
+
+	static get styles() {
+		return css`
+			#content-title {
+				padding-top: 10px;
+			}
+		`;
 	}
 
 	constructor() {
@@ -14,9 +24,27 @@ class UploadConfirmation extends LitElement {
 
 	render() {
 		return html`
-			<h1>Skeleton for Upload Confirmation</h1>
-			<p>File: ${this.contentTitle}</p>
+			<d2l-input-text
+				id="content-title"
+				aria-haspopup="false"
+				aria-invalid=${this.contentTitle === '' ? 'true' : 'false'}
+				title=${this.localize('titleForUpload')}
+				label="${this.localize('title')}"
+				required
+				value=${this.contentTitle}
+				@input=${this.onContentTitleInput}
+				></d2l-input-text>
 		`;
+	}
+
+	onContentTitleInput(event) {
+		this.dispatchEvent(new CustomEvent('change-content-title', {
+			detail: {
+				contentTitle: event.target.value
+			},
+			bubbles: true,
+			composed: true
+		}));
 	}
 }
 
