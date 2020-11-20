@@ -19,7 +19,7 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 			file-drop {
 				display: block;
 				border: 2px dashed var(--d2l-color-corundum);
-				padding: 40px 40px 20px 40px;
+				padding: 40px 40px 10px 40px;
 			}
 			file-drop.drop-valid {
 				background-color: var(--d2l-color-gypsum);
