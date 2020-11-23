@@ -3,7 +3,10 @@ import '../../components/file-upload/content-file-drop.js';
 import '../../components/file-upload/upload-confirmation.js';
 import '../../components/file-upload/upload-progress-indicator.js';
 import { css, html, LitElement } from 'lit-element';
+import { DependencyRequester } from '../../mixins/dependency-requester-mixin.js';
 import { InternalLocalizeMixin } from '../../mixins/internal-localize-mixin';
+import { MobxReactionUpdate } from '@adobe/lit-mobx';
+import { Uploader } from '../../state/uploader.js';
 
 const TabStatus = Object.freeze({
 	PROMPT: 0,
@@ -11,7 +14,7 @@ const TabStatus = Object.freeze({
 	UPLOADING: 2
 });
 
-class UploadAudioVideoTab extends InternalLocalizeMixin(LitElement) {
+class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((InternalLocalizeMixin(LitElement)))) {
 	static get properties() {
 		return {
 			tabStatus: { type: Number },
@@ -55,6 +58,20 @@ class UploadAudioVideoTab extends InternalLocalizeMixin(LitElement) {
 		this.fileName = '';
 		this.fileSize = 0;
 		this.fileType = '';
+
+		this.reactToUploadError = this.reactToUploadError.bind(this);
+		this.reactToUploadSuccess = this.reactToUploadSuccess.bind(this);
+	}
+
+	async connectedCallback() {
+		super.connectedCallback();
+		this.apiClient = this.requestDependency('content-service-client');
+
+		this.uploader = new Uploader({
+			apiClient: this.apiClient,
+			onSuccess: this.reactToUploadSuccess,
+			onError: this.reactToUploadError
+		});
 	}
 
 	render() {
@@ -87,7 +104,7 @@ class UploadAudioVideoTab extends InternalLocalizeMixin(LitElement) {
 
 		let saveButton;
 		if ((this.tabStatus === TabStatus.CONFIRMATION) && this.contentTitle) {
-			saveButton = html`<d2l-button primary>${this.localize('save')}</d2l-button>`;
+			saveButton = html`<d2l-button primary @click=${this.onSaveClick}>${this.localize('save')}</d2l-button>`;
 		} else {
 			saveButton = html`<d2l-button primary disabled>${this.localize('save')}</d2l-button>`;
 		}
@@ -123,8 +140,13 @@ class UploadAudioVideoTab extends InternalLocalizeMixin(LitElement) {
 		this.tabStatus = TabStatus.PROMPT;
 	}
 
+	onSaveClick() {
+		this.uploader.uploadFile(this.file, this.contentTitle);
+		this.tabStatus = TabStatus.UPLOADING;
+	}
+
 	onStageFileForUpload(event) {
-		this.file = event.file;
+		this.file = event.detail.file;
 		this.fileName = event.detail.file.name;
 		this.fileSize = event.detail.file.size;
 		this.fileType = event.detail.file.type;
@@ -141,6 +163,30 @@ class UploadAudioVideoTab extends InternalLocalizeMixin(LitElement) {
 		this.fileType = '';
 		this.contentTitle = '';
 		this.tabStatus = TabStatus.PROMPT;
+	}
+
+	reactToUploadError(errorMessage) {
+		this.errorMessage = errorMessage;
+		this.uploader.reset();
+		this.file = undefined;
+		this.fileName = '';
+		this.fileSize = 0;
+		this.fileType = '';
+		this.contentTitle = '';
+		this.tabStatus = TabStatus.PROMPT;
+	}
+
+	reactToUploadSuccess(contentId, revisionId) {
+		// TODO: Remove this and get the tenant's actual region.
+		const region = 'us-east-1';
+
+		this.dispatchEvent(new CustomEvent('d2l-content-store-content-added', {
+			detail: {
+				d2lrn: `d2l:brightspace:contentservice:${region}:${this.apiClient.tenantId}:${this.fileType}:${contentId}/${revisionId}`
+			},
+			bubbles: true,
+			composed: true
+		}));
 	}
 }
 

@@ -1,7 +1,6 @@
-import { action, decorate, flow, observable } from 'mobx';
+import { action, autorun, decorate, flow, observable } from 'mobx';
 import resolveWorkerError from '../util/resolve-worker-error';
 import { S3Uploader } from '../util/s3-uploader';
-import UploadStatus from '../util/upload-status';
 
 const randomizeDelay = (delay = 30000, range = 5000) => {
 	const low = delay - range;
@@ -18,22 +17,22 @@ const sleep = async(delay = 0) => {
 };
 
 export class Uploader {
-	constructor({ apiClient }) {
+	constructor({ apiClient, onSuccess, onError }) {
 		this.apiClient = apiClient;
-		this.uploadStatus = UploadStatus.IDLE;
 		this.uploadProgress = 0;
+		this.ready = false;
 		this.error = '';
 
-		this.uploadFile = flow((function * (file) {
+		this.content = null;
+		this.revision = null;
+
+		this.uploadFile = flow((function * (file, title) {
 			/* eslint-disable no-invalid-this */
 			const uploadInfo = {
 				file,
-				progress: 0,
+				title,
 				extension: file.name.split('.').pop(),
-				err: null
 			};
-
-			this.uploadStatus = UploadStatus.LOADING;
 
 			try {
 				yield this._uploadWorkflowAsync(uploadInfo);
@@ -42,12 +41,25 @@ export class Uploader {
 			}
 			/* eslint-enable no-invalid-this */
 		}));
+
+		autorun(() => {
+			if (this.ready) {
+				onSuccess(this.content.id, this.revision.id);
+			}
+		});
+		autorun(() => {
+			if (this.error) {
+				onError(this.error);
+			}
+		});
 	}
 
 	reset() {
-		this.uploadStatus = UploadStatus.IDLE;
 		this.uploadProgress = 0;
+		this.ready = false;
 		this.error = '';
+		this.content = null;
+		this.revision = null;
 	}
 
 	async _monitorProgressAsync(content, revision, progressCallback) {
@@ -72,20 +84,20 @@ export class Uploader {
 		await this._monitorProgressAsync(content, revision, progressCallback);
 	}
 
-	async _uploadWorkflowAsync({ file, extension }) {
+	async _uploadWorkflowAsync({ file, title, extension }) {
 		try {
-			const content = await this.apiClient.createContent();
-			const revision = await this.apiClient.createRevision(
-				content.id,
+			this.content = await this.apiClient.createContent();
+			this.revision = await this.apiClient.createRevision(
+				this.content.id,
 				{
-					title: file.name,
+					title,
 					extension
 				}
 			);
 
 			const s3Uploader = new S3Uploader({
 				file,
-				key: revision.s3Key,
+				key: this.revision.s3Key,
 				signRequest: ({ file, key }) =>
 					this.apiClient.signUploadRequest({
 						fileName: key,
@@ -99,21 +111,19 @@ export class Uploader {
 			await s3Uploader.upload();
 
 			await this.apiClient.processRevision({
-				contentId: content.id,
-				revisionId: revision.id
+				contentId: this.content.id,
+				revisionId: this.revision.id
 			});
 
-			await this._monitorProgressAsync(content, revision, ({ percentComplete = 0, ready, error }) => {
+			await this._monitorProgressAsync(this.content, this.revision, ({ percentComplete = 0, ready, error }) => {
 				this.uploadProgress = 50 + (percentComplete / 2);
 				if (error) {
-					this.uploadStatus = UploadStatus.IDLE;
 					this.error = resolveWorkerError(error);
-				} else if (ready) {
-					this.uploadStatus = UploadStatus.SUCCESSFUL;
+				} else {
+					this.ready = ready;
 				}
 			});
 		} catch (error) {
-			this.uploadStatus = UploadStatus.IDLE;
 			this.error = resolveWorkerError(error);
 		}
 	}
@@ -122,7 +132,10 @@ export class Uploader {
 decorate(Uploader, {
 	uploadStatus: observable,
 	uploadProgress: observable,
+	ready: observable,
 	error: observable,
+	content: observable,
+	revision: observable,
 	uploadFile: action,
 	reset: action
 });
