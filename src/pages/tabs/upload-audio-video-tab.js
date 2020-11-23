@@ -86,7 +86,7 @@ class UploadAudioVideoTab extends InternalLocalizeMixin(LitElement) {
 		}
 
 		let saveButton;
-		if (this.fileName && this.contentTitle) {
+		if ((this.tabStatus === TabStatus.CONFIRMATION) && this.contentTitle) {
 			saveButton = html`<d2l-button primary>${this.localize('save')}</d2l-button>`;
 		} else {
 			saveButton = html`<d2l-button primary disabled>${this.localize('save')}</d2l-button>`;
