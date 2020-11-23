@@ -7,7 +7,7 @@ import { InternalLocalizeMixin } from '../../mixins/internal-localize-mixin';
 
 const TabStatus = Object.freeze({
 	PROMPT: 0,
-	CONFIRMAITON: 1,
+	CONFIRMATION: 1,
 	UPLOADING: 2
 });
 
@@ -68,7 +68,7 @@ class UploadAudioVideoTab extends InternalLocalizeMixin(LitElement) {
 						@upload-error=${this.onUploadError}></content-file-drop>
 					`;
 				break;
-			case TabStatus.CONFIRMAITON:
+			case TabStatus.CONFIRMATION:
 				tabContent = html`
 					<upload-confirmation
 						content-title=${this.contentTitle}
@@ -122,7 +122,7 @@ class UploadAudioVideoTab extends InternalLocalizeMixin(LitElement) {
 		this.fileSize = event.detail.file.size;
 		this.fileType = event.detail.file.type;
 		this.contentTitle = this.fileName.substring(0, this.fileName.lastIndexOf('.'));
-		this.tabStatus = TabStatus.CONFIRMAITON;
+		this.tabStatus = TabStatus.CONFIRMATION;
 		this.errorMessage = '';
 	}
 
