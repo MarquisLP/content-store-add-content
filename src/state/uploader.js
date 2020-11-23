@@ -19,12 +19,10 @@ const sleep = async(delay = 0) => {
 export class Uploader {
 	constructor({ apiClient, onSuccess, onError }) {
 		this.apiClient = apiClient;
-		this.uploadProgress = 0;
-		this.ready = false;
-		this.error = '';
+		this.onSuccess = onSuccess;
+		this.onError = onError;
 
-		this.content = null;
-		this.revision = null;
+		this.uploadProgress = 0;
 
 		this.uploadFile = flow((function * (file, title) {
 			/* eslint-disable no-invalid-this */
@@ -37,29 +35,14 @@ export class Uploader {
 			try {
 				yield this._uploadWorkflowAsync(uploadInfo);
 			} catch (error) {
-				this.error = resolveWorkerError(error);
+				this.onError(resolveWorkerError(error));
 			}
 			/* eslint-enable no-invalid-this */
 		}));
-
-		autorun(() => {
-			if (this.ready) {
-				onSuccess(this.content.id, this.revision.id);
-			}
-		});
-		autorun(() => {
-			if (this.error) {
-				onError(this.error);
-			}
-		});
 	}
 
 	reset() {
 		this.uploadProgress = 0;
-		this.ready = false;
-		this.error = '';
-		this.content = null;
-		this.revision = null;
 	}
 
 	async _monitorProgressAsync(content, revision, progressCallback) {
@@ -86,9 +69,9 @@ export class Uploader {
 
 	async _uploadWorkflowAsync({ file, title, extension }) {
 		try {
-			this.content = await this.apiClient.createContent();
-			this.revision = await this.apiClient.createRevision(
-				this.content.id,
+			const content = await this.apiClient.createContent();
+			const revision = await this.apiClient.createRevision(
+				content.id,
 				{
 					title,
 					extension
@@ -97,7 +80,7 @@ export class Uploader {
 
 			const s3Uploader = new S3Uploader({
 				file,
-				key: this.revision.s3Key,
+				key: revision.s3Key,
 				signRequest: ({ file, key }) =>
 					this.apiClient.signUploadRequest({
 						fileName: key,
@@ -111,20 +94,20 @@ export class Uploader {
 			await s3Uploader.upload();
 
 			await this.apiClient.processRevision({
-				contentId: this.content.id,
-				revisionId: this.revision.id
+				contentId: content.id,
+				revisionId: revision.id
 			});
 
-			await this._monitorProgressAsync(this.content, this.revision, ({ percentComplete = 0, ready, error }) => {
+			await this._monitorProgressAsync(content, revision, ({ percentComplete = 0, ready, error }) => {
 				this.uploadProgress = 50 + (percentComplete / 2);
 				if (error) {
-					this.error = resolveWorkerError(error);
-				} else {
-					this.ready = ready;
+					this.onError(resolveWorkerError(error));
+				} else if (ready) {
+					this.onSuccess(content.id, revision.id);
 				}
 			});
 		} catch (error) {
-			this.error = resolveWorkerError(error);
+			this.onError(resolveWorkerError(error));
 		}
 	}
 }
@@ -132,10 +115,6 @@ export class Uploader {
 decorate(Uploader, {
 	uploadStatus: observable,
 	uploadProgress: observable,
-	ready: observable,
-	error: observable,
-	content: observable,
-	revision: observable,
 	uploadFile: action,
 	reset: action
 });
