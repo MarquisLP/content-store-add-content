@@ -128,6 +128,11 @@ class UploadAudioVideoTab extends InternalLocalizeMixin(LitElement) {
 
 	onUploadError(event) {
 		this.errorMessage = event.detail.message;
+		this.file = undefined;
+		this.fileName = '';
+		this.fileSize = 0;
+		this.fileType = '';
+		this.contentTitle = '';
 		this.tabStatus = TabStatus.PROMPT;
 	}
 }
