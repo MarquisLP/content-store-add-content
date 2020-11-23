@@ -165,8 +165,8 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 		this.tabStatus = TabStatus.PROMPT;
 	}
 
-	reactToUploadError(errorMessage) {
-		this.errorMessage = errorMessage;
+	reactToUploadError(error) {
+		this.errorMessage = this.localize(error);
 		this.uploader.reset();
 		this.file = undefined;
 		this.fileName = '';

@@ -12,5 +12,16 @@ export const val = {
 	changeFile: 'Change File',
 	remove: 'Remove',
 	save: 'Save',
-	cancel: 'Cancel'
+	cancel: 'Cancel',
+	workerErrorConflict: 'A course already exists. Please refresh',
+	workerErrorEmptyFile: 'The file cannot be empty',
+	workerErrorInvalidFileType: 'Failed to extract contents of package. Please upload a zip file',
+	workerErrorScormManifestMalformed: 'The package manifest contains invalid XML',
+	workerErrorScormManifestMissing: 'The package is missing a manifest',
+	workerErrorSizeLimitReached: 'The file size is too big',
+	workerErrorTimedOut: 'The package processing timed out',
+	workerErrorUnexpectedError: 'An unexpected error occurred',
+	workerErrorUnzipFailed: 'Package unzipping failed',
+	workerErrorUploadFailed: 'Upload failed',
+	workerErrorZipFileCorrupted: 'The package zip file is corrupted',
 };
