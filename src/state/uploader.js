@@ -1,4 +1,4 @@
-import { action, autorun, decorate, flow, observable } from 'mobx';
+import { action, decorate, flow, observable } from 'mobx';
 import resolveWorkerError from '../util/resolve-worker-error';
 import { S3Uploader } from '../util/s3-uploader';
 
