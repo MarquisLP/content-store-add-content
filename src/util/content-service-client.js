@@ -7,12 +7,10 @@ d2lfetch.use({ name: 'auth', fn: auth });
 export default class ContentServiceClient {
 	constructor({
 		endpoint,
-		tenantId,
-		awsRegion
+		tenantId
 	}) {
 		this.endpoint = endpoint;
 		this.tenantId = tenantId;
-		this.awsRegion = awsRegion;
 	}
 
 	createContent(body) {

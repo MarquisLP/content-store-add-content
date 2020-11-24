@@ -8,8 +8,7 @@ class D2lContentStoreAddContent extends DependencyProvider(LitElement) {
 	static get properties() {
 		return {
 			apiEndpoint: { type: String, attribute: 'api-endpoint' },
-			tenantId: { type: String, attribute: 'tenant-id' },
-			awsRegion: { type: String, attribute: 'aws-region' }
+			tenantId: { type: String, attribute: 'tenant-id' }
 		};
 	}
 
@@ -30,8 +29,7 @@ class D2lContentStoreAddContent extends DependencyProvider(LitElement) {
 
 		const apiClient = new ContentServiceClient({
 			endpoint: this.apiEndpoint,
-			tenantId: this.tenantId,
-			awsRegion: this.awsRegion
+			tenantId: this.tenantId
 		});
 		this.provideDependency('content-service-client', apiClient);
 

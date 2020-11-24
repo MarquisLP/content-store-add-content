@@ -177,9 +177,12 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 	}
 
 	reactToUploadSuccess(contentId, revisionId) {
+		// TODO: Remove this and get the tenant's actual region.
+		const region = 'us-east-1';
+
 		this.dispatchEvent(new CustomEvent('d2l-content-store-content-added', {
 			detail: {
-				d2lrn: `d2l:brightspace:contentservice:${this.apiClient.awsRegion}:${this.apiClient.tenantId}:${this.fileType}:${contentId}/${revisionId}`
+				d2lrn: `d2l:brightspace:contentservice:${region}:${this.apiClient.tenantId}:${this.fileType}:${contentId}/${revisionId}`
 			},
 			bubbles: true,
 			composed: true
