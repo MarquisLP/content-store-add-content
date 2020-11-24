@@ -60,7 +60,11 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 				<center>
 					<h2 class="d2l-heading-2">${this.localize('dropAudioVideoFile')}</h2>
 					<p class="d2l-body-standard">${this.localize('or')}</p>
-					<d2l-button @click=${this.onBrowseClick}>${this.localize('browse')}
+					<d2l-button
+						description=${this.localize('browseForFile')}
+						@click=${this.onBrowseClick}
+						>
+						${this.localize('browse')}
 						<input id="file-select" type="file" accept=${this._supportedMimeTypes.join(',')} @change=${this.onFileInputChange} />
 					</d2l-button>
 					<p id="file-size-limit" class="d2l-body-small">${this.localize('fileLimit1Gb')}</p>
