@@ -111,7 +111,7 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 
 		let cancelButton;
 		if ([TabStatus.PROMPT, TabStatus.CONFIRMATION].includes(this.tabStatus)) {
-			cancelButton = html`<d2l-button>${this.localize('cancel')}</d2l-button>`;
+			cancelButton = html`<d2l-button @click=${this.onCancelClick}>${this.localize('cancel')}</d2l-button>`;
 		} else {
 			cancelButton = html`<d2l-button disabled>${this.localize('cancel')}</d2l-button>`;
 		}
@@ -125,6 +125,13 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 				${cancelButton}
 			</div>
 		</div>`;
+	}
+
+	onCancelClick() {
+		this.dispatchEvent(new CustomEvent('d2l-content-store-cancel-add-content', {
+			bubbles: true,
+			composed: true
+		}));
 	}
 
 	onChangeContentTitle(event) {
