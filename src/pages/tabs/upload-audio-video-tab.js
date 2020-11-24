@@ -98,7 +98,9 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 				break;
 			case TabStatus.UPLOADING:
 				tabContent = html`
-					<upload-progress-indicator></upload-progress-indicator>
+					<upload-progress-indicator
+						file-name=${this.fileName}
+						upload-progress=${this.uploader.uploadProgress}></upload-progress-indicator>
 				`;
 		}
 

@@ -16,6 +16,7 @@ export const val = {
 	addSelectedContentToCourse: 'Add your selected content to the course',
 	cancel: 'Cancel',
 	closeDialog: 'Close this dialog',
+	uploading: 'Uploading...',
 	workerErrorConflict: 'A course already exists. Please refresh',
 	workerErrorEmptyFile: 'The file cannot be empty',
 	workerErrorInvalidFileType: 'Failed to extract contents of package. Please upload a zip file',
