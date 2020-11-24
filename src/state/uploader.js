@@ -103,7 +103,7 @@ export class Uploader {
 				if (error) {
 					this.onError(resolveWorkerError(error));
 				} else if (ready) {
-					this.onSuccess(content.id, revision.id);
+					this.onSuccess(revision.d2lrn);
 				}
 			});
 		} catch (error) {
