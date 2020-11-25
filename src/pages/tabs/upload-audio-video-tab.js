@@ -36,7 +36,7 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 			}
 			#tab-content-container {
 				width: 100%;
-				overflow-y: scroll;
+				overflow-y: auto;
 			}
 			#top-level-buttons {
 				display: flex;
