@@ -10,6 +10,7 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 	static get properties() {
 		return {
 			_supportedMimeTypes: { type: Array },
+			enableFileDrop: { type: Boolean, attribute: 'enable-file-drop' },
 			errorMessage: { type: String, attribute: 'error-message' }
 		};
 	}
@@ -20,6 +21,18 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 				display: block;
 				border: 2px dashed var(--d2l-color-corundum);
 				padding: 40px 40px 10px 40px;
+			}
+			@media screen and (max-width: 480px) {
+				#no-file-drop-container {
+					display: block;
+					padding: 30vh 40px 10px 40px;
+				}
+			}
+			@media screen and (min-width: 481px) {
+				#no-file-drop-container {
+					display: block;
+					padding: 8vh 40px 10px 40px;
+				}
 			}
 			file-drop.drop-valid {
 				background-color: var(--d2l-color-gypsum);
@@ -55,23 +68,42 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 	}
 
 	render() {
-		return html`
-			<file-drop @filedrop=${this.onFileDrop} accept=${this._supportedMimeTypes.join(',')}>
-				<center>
-					<h2 class="d2l-heading-2">${this.localize('dropAudioVideoFile')}</h2>
-					<p class="d2l-body-standard">${this.localize('or')}</p>
-					<d2l-button
-						description=${this.localize('browseForFile')}
-						@click=${this.onBrowseClick}
-						>
-						${this.localize('browse')}
-						<input id="file-select" type="file" accept=${this._supportedMimeTypes.join(',')} @change=${this.onFileInputChange} />
-					</d2l-button>
-					<p id="file-size-limit" class="d2l-body-small">${this.localize('fileLimit1Gb')}</p>
-					<p id="error-message" class="d2l-body-compact">${this.errorMessage}&nbsp;</p>
-				</center>
-			</file-drop>
-		`;
+		console.log(this.enableFileDrop);
+		if (this.enableFileDrop) {
+			return html`
+				<file-drop @filedrop=${this.onFileDrop} accept=${this._supportedMimeTypes.join(',')}>
+					<center>
+						<h2 class="d2l-heading-2">${this.localize('dropAudioVideoFile')}</h2>
+						<p class="d2l-body-standard">${this.localize('or')}</p>
+						<d2l-button
+							description=${this.localize('browseForFile')}
+							@click=${this.onBrowseClick}
+							>
+							${this.localize('browse')}
+							<input id="file-select" type="file" accept=${this._supportedMimeTypes.join(',')} @change=${this.onFileInputChange} />
+						</d2l-button>
+						<p id="file-size-limit" class="d2l-body-small">${this.localize('fileLimit1Gb')}</p>
+						<p id="error-message" class="d2l-body-compact">${this.errorMessage}&nbsp;</p>
+					</center>
+				</file-drop>
+			`;
+		} else {
+			return html`
+				<div id="no-file-drop-container">
+					<center>
+						<d2l-button
+							description=${this.localize('browseForFile')}
+							@click=${this.onBrowseClick}
+							>
+							${this.localize('browse')}
+							<input id="file-select" type="file" accept=${this._supportedMimeTypes.join(',')} @change=${this.onFileInputChange} />
+						</d2l-button>
+						<p id="file-size-limit" class="d2l-body-small">${this.localize('fileLimit1Gb')}</p>
+						<p id="error-message" class="d2l-body-compact">${this.errorMessage}&nbsp;</p>
+					</center>
+				</div>
+			`;
+		}
 	}
 
 	onBrowseClick() {

@@ -47,6 +47,16 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 			#top-level-buttons > * {
 				margin: 5px;
 			}
+			@media (any-pointer: none) or (any-pointer: fine) {
+				#prompt-with-file-drop-disabled {
+					display: none;
+				}
+			}
+			@media (any-pointer: coarse) {
+				#prompt-with-file-drop-enabled {
+					display: none;
+				}
+			}
 		`;
 	}
 
@@ -80,6 +90,13 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 			case TabStatus.PROMPT:
 				tabContent = html`
 					<content-file-drop
+						id="prompt-with-file-drop-enabled"
+						error-message=${this.errorMessage}
+						enable-file-drop
+						@stage-file-for-upload=${this.onStageFileForUpload}
+						@upload-error=${this.onUploadError}></content-file-drop>
+					<content-file-drop
+						id="prompt-with-file-drop-disabled"
 						error-message=${this.errorMessage}
 						@stage-file-for-upload=${this.onStageFileForUpload}
 						@upload-error=${this.onUploadError}></content-file-drop>
