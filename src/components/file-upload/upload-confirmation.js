@@ -24,18 +24,22 @@ class UploadConfirmation extends InternalLocalizeMixin(LitElement) {
 			#content-title {
 				padding-top: 10px;
 			}
-			#staged-file {
-				display: flex;
-				flex-direction: row;
-				justify-content: center;
-				align-items: center;
+			#staged-file-wrapper {
 				margin-top: 30px;
+				width: 100%;
+			}
+			#staged-file {
+				display: table;
+				margin: 0 auto;
 			}
 			#staged-file > * {
 				margin: 3px;
+				display: inline-block;
 			}
 			#file-details {
 				font-weight: 600;
+				word-break: break-word;
+				overflow-break: break-word;
 			}
 		`];
 	}
@@ -61,17 +65,19 @@ class UploadConfirmation extends InternalLocalizeMixin(LitElement) {
 					value=${this.contentTitle}
 					@input=${this.onContentTitleInput}
 					></d2l-input-text>
-				<div id="staged-file">
-					<d2l-icon icon="${this.fileType.startsWith('audio') ? 'tier1:file-audio' : 'tier1:file-video'}"></d2l-icon>
-					<p id="file-details" class="d2l-body-compact">${this.fileName} (${(this.fileSize / Math.pow(2, 20)).toFixed(2)} MB)</p>
-					<d2l-button-icon
-						id="change-file-button"
-						aria-expanded="false"
-						aria-haspopup="false"
-						aria-label=${this.localize('changeFile')}
-						text="${this.localize('remove')} ${this.fileName}"
-						icon="tier1:close-default"
-						@click=${this.onChangeFileClick}></d2l-button-icon>
+				<div id="staged-file-wrapper">
+					<div id="staged-file">
+						<d2l-icon icon="${this.fileType.startsWith('audio') ? 'tier1:file-audio' : 'tier1:file-video'}"></d2l-icon>
+						<p id="file-details" class="d2l-body-compact">${this.fileName} (${(this.fileSize / Math.pow(2, 20)).toFixed(2)} MB)</p>
+						<d2l-button-icon
+							id="change-file-button"
+							aria-expanded="false"
+							aria-haspopup="false"
+							aria-label=${this.localize('changeFile')}
+							text="${this.localize('remove')} ${this.fileName}"
+							icon="tier1:close-default"
+							@click=${this.onChangeFileClick}></d2l-button-icon>
+					</div>
 				</div>
 			</div>
 		`;
