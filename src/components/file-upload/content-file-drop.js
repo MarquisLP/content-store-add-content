@@ -25,13 +25,13 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 			@media screen and (max-width: 480px) {
 				#no-file-drop-container {
 					display: block;
-					padding: 30vh 40px 10px 40px;
+					padding: 30vh 20px 10px 20px;
 				}
 			}
 			@media screen and (min-width: 481px) {
 				#no-file-drop-container {
 					display: block;
-					padding: 8vh 40px 10px 40px;
+					padding: 8vh 20px 10px 20px;
 				}
 			}
 			file-drop.drop-valid {
