@@ -68,7 +68,7 @@ class UploadConfirmation extends InternalLocalizeMixin(LitElement) {
 				<div id="staged-file-wrapper">
 					<div id="staged-file">
 						<d2l-icon icon="${this.fileType.startsWith('audio') ? 'tier1:file-audio' : 'tier1:file-video'}"></d2l-icon>
-						<p id="file-details" class="d2l-body-compact">${this.fileName} (${(this.fileSize / Math.pow(2, 20)).toFixed(2)} MB)</p>
+						<p id="file-details" class="d2l-body-compact">${this.fileName} (${this.getFileSizeText(this.fileSize)})</p>
 						<d2l-button-icon
 							id="change-file-button"
 							aria-expanded="false"
@@ -81,6 +81,16 @@ class UploadConfirmation extends InternalLocalizeMixin(LitElement) {
 				</div>
 			</div>
 		`;
+	}
+
+	getFileSizeText(fileSize) {
+		if (fileSize < Math.pow(2, 10)) {
+			return `${fileSize} B`;
+		} else if (fileSize < Math.pow(2, 20)) {
+			return `${(fileSize / Math.pow(2, 10)).toFixed(2)} KB`;
+		} else {
+			return `${(fileSize / Math.pow(2, 20)).toFixed(2)} MB`;
+		}
 	}
 
 	onChangeFileClick() {
