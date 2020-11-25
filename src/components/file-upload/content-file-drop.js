@@ -68,7 +68,6 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 	}
 
 	render() {
-		console.log(this.enableFileDrop);
 		if (this.enableFileDrop) {
 			return html`
 				<file-drop @filedrop=${this.onFileDrop} accept=${this._supportedMimeTypes.join(',')}>
