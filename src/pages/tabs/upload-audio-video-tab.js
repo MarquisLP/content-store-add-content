@@ -47,12 +47,12 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 			#top-level-buttons > * {
 				margin: 5px;
 			}
-			@media (any-pointer: none) or (any-pointer: fine) {
+			@media (hover: hover) {
 				#prompt-with-file-drop-disabled {
 					display: none;
 				}
 			}
-			@media (any-pointer: coarse) {
+			@media (hover: none) {
 				#prompt-with-file-drop-enabled {
 					display: none;
 				}
