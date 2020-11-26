@@ -148,7 +148,7 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 			}));
 			return;
 		}
-		if (file.size > 1000000000) {
+		if (file.size > Math.pow(2, 30)) {
 			this.dispatchEvent(new CustomEvent('upload-error', {
 				detail: {
 					message: this.localize('fileTooLarge')
