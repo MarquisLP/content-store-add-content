@@ -104,7 +104,6 @@ export class Uploader {
 }
 
 decorate(Uploader, {
-	uploadStatus: observable,
 	uploadProgress: observable,
 	uploadFile: action,
 	reset: action
