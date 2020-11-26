@@ -26,17 +26,7 @@ export class Uploader {
 
 		this.uploadFile = flow((function * (file, title) {
 			/* eslint-disable no-invalid-this */
-			const uploadInfo = {
-				file,
-				title,
-				extension: file.name.split('.').pop(),
-			};
-
-			try {
-				yield this._uploadWorkflowAsync(uploadInfo);
-			} catch (error) {
-				this.onError(resolveWorkerError(error));
-			}
+			yield this._uploadWorkflowAsync(file, title);
 			/* eslint-enable no-invalid-this */
 		}));
 	}
@@ -67,8 +57,9 @@ export class Uploader {
 		await this._monitorProgressAsync(content, revision, progressCallback);
 	}
 
-	async _uploadWorkflowAsync({ file, title, extension }) {
+	async _uploadWorkflowAsync(file, title) {
 		try {
+			const extension = file.name.split('.').pop();
 			const content = await this.apiClient.createContent();
 			const revision = await this.apiClient.createRevision(
 				content.id,
