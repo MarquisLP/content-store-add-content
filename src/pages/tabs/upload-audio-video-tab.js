@@ -167,8 +167,8 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 	}
 
 	onSaveClick() {
-		this.uploader.uploadFile(this.file, this.contentTitle);
 		this.tabStatus = TabStatus.UPLOADING;
+		this.uploader.uploadFile(this.file, this.contentTitle);
 	}
 
 	onStageFileForUpload(event) {
