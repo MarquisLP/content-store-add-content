@@ -35,26 +35,26 @@ export class Uploader {
 		this.uploadProgress = 0;
 	}
 
-	async _monitorProgressAsync(content, revision, progressCallback) {
+	async _monitorProgressAsync(content, revision) {
 		try {
 			const progress = await this.apiClient.getWorkflowProgress({
 				contentId: content.id,
 				revisionId: revision.id
 			});
-			progressCallback({
-				percentComplete: progress.percentComplete,
-				ready: progress.ready
-			});
+
+			this.uploadProgress = 50 + ((progress.percentComplete || 0) / 2);
+
 			if (progress.ready) {
+				this.onSuccess(revision.d2lrn);
 				return;
 			}
 		} catch (error) {
-			progressCallback({ error });
+			this.onError(resolveWorkerError(error));
 			return;
 		}
 
 		await sleep(randomizeDelay(5000, 1000));
-		await this._monitorProgressAsync(content, revision, progressCallback);
+		await this._monitorProgressAsync(content, revision);
 	}
 
 	async _uploadWorkflowAsync(file, title) {
@@ -89,14 +89,7 @@ export class Uploader {
 				revisionId: revision.id
 			});
 
-			await this._monitorProgressAsync(content, revision, ({ percentComplete = 0, ready, error }) => {
-				this.uploadProgress = 50 + (percentComplete / 2);
-				if (error) {
-					this.onError(resolveWorkerError(error));
-				} else if (ready) {
-					this.onSuccess(revision.d2lrn);
-				}
-			});
+			await this._monitorProgressAsync(content, revision);
 		} catch (error) {
 			this.onError(resolveWorkerError(error));
 		}
