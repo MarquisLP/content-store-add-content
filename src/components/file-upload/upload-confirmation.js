@@ -91,8 +91,10 @@ class UploadConfirmation extends InternalLocalizeMixin(LitElement) {
 			return `${fileSize} B`;
 		} else if (fileSize < Math.pow(2, 20)) {
 			return `${(fileSize / Math.pow(2, 10)).toFixed(2)} KB`;
-		} else {
+		} else if (fileSize < Math.pow(2, 30)) {
 			return `${(fileSize / Math.pow(2, 20)).toFixed(2)} MB`;
+		} else {
+			return `${(fileSize / Math.pow(2, 30)).toFixed(2)} GB`;
 		}
 	}
 
