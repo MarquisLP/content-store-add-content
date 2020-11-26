@@ -123,16 +123,34 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 
 		let saveButton;
 		if ((this.tabStatus === TabStatus.CONFIRMATION) && this.contentTitle) {
-			saveButton = html`<d2l-button primary description=${this.localize('addSelectedContentToCourse')} @click=${this.onSaveClick}>${this.localize('save')}</d2l-button>`;
+			saveButton = html`
+				<d2l-button
+					primary
+					description=${this.localize('addSelectedContentToCourse')}
+					@click=${this.onSaveClick}
+					>${this.localize('save')}</d2l-button>`;
 		} else {
-			saveButton = html`<d2l-button primary description=${this.localize('addSelectedContentToCourse')} disabled>${this.localize('save')}</d2l-button>`;
+			saveButton = html`
+				<d2l-button
+					primary
+					description=${this.localize('addSelectedContentToCourse')}
+					disabled
+					>${this.localize('save')}</d2l-button>`;
 		}
 
 		let cancelButton;
 		if ([TabStatus.PROMPT, TabStatus.CONFIRMATION].includes(this.tabStatus)) {
-			cancelButton = html`<d2l-button description=${this.localize('closeDialog')} @click=${this.onCancelClick}>${this.localize('cancel')}</d2l-button>`;
+			cancelButton = html`
+				<d2l-button
+					description=${this.localize('closeDialog')}
+					@click=${this.onCancelClick}
+					>${this.localize('cancel')}</d2l-button>`;
 		} else {
-			cancelButton = html`<d2l-button description=${this.localize('closeDialog')} disabled>${this.localize('cancel')}</d2l-button>`;
+			cancelButton = html`
+				<d2l-button
+					description=${this.localize('closeDialog')}
+					disabled
+					>${this.localize('cancel')}</d2l-button>`;
 		}
 
 		return html`<div id="tab-container">

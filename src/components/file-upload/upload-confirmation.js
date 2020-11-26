@@ -68,7 +68,10 @@ class UploadConfirmation extends InternalLocalizeMixin(LitElement) {
 				<div id="staged-file-wrapper">
 					<div id="staged-file">
 						<d2l-icon icon="${this.fileType.startsWith('audio') ? 'tier1:file-audio' : 'tier1:file-video'}"></d2l-icon>
-						<p id="file-details" class="d2l-body-compact">${this.fileName} (${this.getFileSizeText(this.fileSize)})</p>
+						<p
+							id="file-details"
+							class="d2l-body-compact"
+							>${this.fileName} (${this.getFileSizeText(this.fileSize)})</p>
 						<d2l-button-icon
 							id="change-file-button"
 							aria-expanded="false"

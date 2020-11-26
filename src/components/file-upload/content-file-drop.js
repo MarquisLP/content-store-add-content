@@ -79,7 +79,11 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 							@click=${this.onBrowseClick}
 							>
 							${this.localize('browse')}
-							<input id="file-select" type="file" accept=${this._supportedMimeTypes.join(',')} @change=${this.onFileInputChange} />
+							<input
+								id="file-select"
+								type="file"
+								accept=${this._supportedMimeTypes.join(',')}
+								@change=${this.onFileInputChange} />
 						</d2l-button>
 						<p id="file-size-limit" class="d2l-body-small">${this.localize('fileLimit1Gb')}</p>
 						<p id="error-message" class="d2l-body-compact">${this.errorMessage}&nbsp;</p>
@@ -95,7 +99,11 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 							@click=${this.onBrowseClick}
 							>
 							${this.localize('browse')}
-							<input id="file-select" type="file" accept=${this._supportedMimeTypes.join(',')} @change=${this.onFileInputChange} />
+							<input
+								id="file-select"
+								type="file"
+								accept=${this._supportedMimeTypes.join(',')}
+								@change=${this.onFileInputChange} />
 						</d2l-button>
 						<p id="file-size-limit" class="d2l-body-small">${this.localize('fileLimit1Gb')}</p>
 						<p id="error-message" class="d2l-body-compact">${this.errorMessage}&nbsp;</p>
