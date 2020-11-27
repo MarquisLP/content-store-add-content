@@ -39,10 +39,9 @@ To make your usage of `d2l-content-store-add-content` accessible, use the follow
 1. After cloning the repo, run `npm install` to install dependencies.
 2. Create a local clone of [BSI](https://github.com/Brightspace/brightspace-integration). In its directory, run `npm install`.
 3. cd to your local `d2l-content-store-add-content` repo.\
-   Run: `node ./scripts/install-missing-bsi-dependencies.js`\
-   followed by: `npm link`\
-   **(Note that these two commands must be executed in that order.)**
-5. cd to your BSI clone and run `npm link d2l-content-store-add-content`.
+   Run: `node ./scripts/install-missing-bsi-dependencies.js <path to your local BSI instance>`\
+   and: `npm link`
+4. cd to your BSI clone and run `npm link d2l-content-store-add-content`.
 
 ### Running the demos
 
