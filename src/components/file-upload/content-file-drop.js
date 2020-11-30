@@ -68,25 +68,30 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 	}
 
 	render() {
+		const browseFileSection = html`
+			<d2l-button
+				description=${this.localize('browseForFile')}
+				@click=${this.onBrowseClick}
+				>
+				${this.localize('browse')}
+				<input
+					id="file-select"
+					type="file"
+					accept=${this._supportedMimeTypes.join(',')}
+					@change=${this.onFileInputChange} />
+			</d2l-button>
+			<p id="file-size-limit" class="d2l-body-small">${this.localize('fileLimit1Gb')}</p>
+		`;
+		const errorMessageText = html`<p id="error-message" class="d2l-body-compact">${this.errorMessage}&nbsp;</p>`;
+
 		if (this.enableFileDrop) {
 			return html`
 				<file-drop @filedrop=${this.onFileDrop} accept=${this._supportedMimeTypes.join(',')}>
 					<center>
 						<h2 class="d2l-heading-2">${this.localize('dropAudioVideoFile')}</h2>
 						<p class="d2l-body-standard">${this.localize('or')}</p>
-						<d2l-button
-							description=${this.localize('browseForFile')}
-							@click=${this.onBrowseClick}
-							>
-							${this.localize('browse')}
-							<input
-								id="file-select"
-								type="file"
-								accept=${this._supportedMimeTypes.join(',')}
-								@change=${this.onFileInputChange} />
-						</d2l-button>
-						<p id="file-size-limit" class="d2l-body-small">${this.localize('fileLimit1Gb')}</p>
-						<p id="error-message" class="d2l-body-compact">${this.errorMessage}&nbsp;</p>
+						${browseFileSection}
+						${errorMessageText}
 					</center>
 				</file-drop>
 			`;
@@ -94,19 +99,8 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 			return html`
 				<div id="no-file-drop-container">
 					<center>
-						<d2l-button
-							description=${this.localize('browseForFile')}
-							@click=${this.onBrowseClick}
-							>
-							${this.localize('browse')}
-							<input
-								id="file-select"
-								type="file"
-								accept=${this._supportedMimeTypes.join(',')}
-								@change=${this.onFileInputChange} />
-						</d2l-button>
-						<p id="file-size-limit" class="d2l-body-small">${this.localize('fileLimit1Gb')}</p>
-						<p id="error-message" class="d2l-body-compact">${this.errorMessage}&nbsp;</p>
+						${browseFileSection}
+						${errorMessageText}
 					</center>
 				</div>
 			`;
