@@ -2,6 +2,7 @@ import '@brightspace-ui/core/components/button/button-icon.js';
 import '@brightspace-ui/core/components/inputs/input-text.js';
 import { css, html, LitElement } from 'lit-element';
 import { bodyCompactStyles } from '@brightspace-ui/core/components/typography/styles.js';
+import { formatFileSize } from '@brightspace-ui/intl/lib/fileSize.js';
 import { InternalLocalizeMixin } from '../../mixins/internal-localize-mixin';
 
 class UploadConfirmation extends InternalLocalizeMixin(LitElement) {
@@ -71,7 +72,7 @@ class UploadConfirmation extends InternalLocalizeMixin(LitElement) {
 						<p
 							id="file-details"
 							class="d2l-body-compact"
-							>${this.fileName} (${this.getFileSizeText(this.fileSize)})</p>
+							>${this.fileName} (${formatFileSize(this.fileSize)})</p>
 						<d2l-button-icon
 							id="change-file-button"
 							aria-expanded="false"
@@ -84,18 +85,6 @@ class UploadConfirmation extends InternalLocalizeMixin(LitElement) {
 				</div>
 			</div>
 		`;
-	}
-
-	getFileSizeText(fileSize) {
-		if (fileSize < Math.pow(2, 10)) {
-			return `${fileSize} B`;
-		} else if (fileSize < Math.pow(2, 20)) {
-			return `${(fileSize / Math.pow(2, 10)).toFixed(2)} KB`;
-		} else if (fileSize < Math.pow(2, 30)) {
-			return `${(fileSize / Math.pow(2, 20)).toFixed(2)} MB`;
-		} else {
-			return `${(fileSize / Math.pow(2, 30)).toFixed(2)} GB`;
-		}
 	}
 
 	onChangeFileClick() {
