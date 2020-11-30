@@ -134,7 +134,6 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 					>${this.localize('save')}</d2l-button>
 				<d2l-button
 					description=${this.localize('closeDialog')}
-					?disabled=${this.tabStatus === TabStatus.UPLOADING}
 					@click=${this.onCancelClick}
 					>${this.localize('cancel')}</d2l-button>
 			</div>
@@ -142,10 +141,21 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 	}
 
 	onCancelClick() {
-		this.dispatchEvent(new CustomEvent('d2l-content-store-cancel-add-content', {
-			bubbles: true,
-			composed: true
-		}));
+		if (this.tabStatus === TabStatus.UPLOADING) {
+			this.uploader.cancelUpload()
+				.catch(() => {
+					this.errorMessage = this.localize('workerErrorCancelUploadFailed');
+				})
+				.finally(() => {
+					this.uploader.reset();
+					this.onDiscardStagedFile();
+				});
+		} else {
+			this.dispatchEvent(new CustomEvent('d2l-content-store-cancel-add-content', {
+				bubbles: true,
+				composed: true
+			}));
+		}
 	}
 
 	onChangeContentTitle(event) {

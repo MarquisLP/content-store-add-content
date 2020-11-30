@@ -27,5 +27,6 @@ export const val = {
 	workerErrorUnexpectedError: 'An unexpected error occurred',
 	workerErrorUnzipFailed: 'Package unzipping failed',
 	workerErrorUploadFailed: 'Upload failed',
+	workerErrorCancelUploadFailed: 'The upload could not be cancelled',
 	workerErrorZipFileCorrupted: 'The package zip file is corrupted',
 };

@@ -29,6 +29,14 @@ export default class ContentServiceClient {
 		});
 	}
 
+	deleteContent(contentId) {
+		return this._fetch({
+			path: `/api/${this.tenantId}/content/${contentId}`,
+			method: 'DELETE',
+			extractJsonBody: false
+		});
+	}
+
 	getSupportedMimeTypes() {
 		return this._fetch({ path: '/api/conf/supported-mime-types' });
 	}

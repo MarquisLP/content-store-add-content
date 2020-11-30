@@ -26,7 +26,7 @@ export class S3Uploader {
 		return xhr;
 	}
 
-	async upload() {
+	async upload(callback) {
 		const { file, key } = this;
 		const signResult = await this.signRequest({ file, key });
 		return new Promise((resolve, reject) => {
@@ -59,6 +59,7 @@ export class S3Uploader {
 
 			xhr.setRequestHeader('x-amz-acl', 'private');
 			this.httprequest = xhr;
+			xhr.onload = callback;
 			xhr.send(file);
 		});
 	}
