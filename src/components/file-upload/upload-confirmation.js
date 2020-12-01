@@ -8,10 +8,10 @@ import { InternalLocalizeMixin } from '../../mixins/internal-localize-mixin';
 class UploadConfirmation extends InternalLocalizeMixin(LitElement) {
 	static get properties() {
 		return {
-			contentTitle: { type: String, attribute: 'content-title' },
-			fileName: { type: String, attribute: 'file-name' },
-			fileSize: { type: String, attribute: 'file-size' },
-			fileType: { type: String, attribute: 'file-type' }
+			contentTitle: { type: String, attribute: 'content-title', reflect: true },
+			fileName: { type: String, attribute: 'file-name', reflect: true },
+			fileSize: { type: String, attribute: 'file-size', reflect: true },
+			fileType: { type: String, attribute: 'file-type', reflect: true }
 		};
 	}
 

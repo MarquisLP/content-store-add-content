@@ -9,9 +9,9 @@ import { InternalLocalizeMixin } from '../../mixins/internal-localize-mixin';
 class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitElement)) {
 	static get properties() {
 		return {
-			_supportedMimeTypes: { type: Array },
-			enableFileDrop: { type: Boolean, attribute: 'enable-file-drop' },
-			errorMessage: { type: String, attribute: 'error-message' }
+			_supportedMimeTypes: { type: Array, attribute: false },
+			enableFileDrop: { type: Boolean, attribute: 'enable-file-drop', reflect: true },
+			errorMessage: { type: String, attribute: 'error-message', reflect: true }
 		};
 	}
 
@@ -57,6 +57,7 @@ class ContentFileDrop extends DependencyRequester(InternalLocalizeMixin(LitEleme
 	constructor() {
 		super();
 		this._supportedMimeTypes = [];
+		this.enableFileDrop = false;
 	}
 
 	async connectedCallback() {

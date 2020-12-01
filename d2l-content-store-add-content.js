@@ -7,8 +7,8 @@ import { Uploader } from './src/state/uploader';
 class D2lContentStoreAddContent extends DependencyProvider(LitElement) {
 	static get properties() {
 		return {
-			apiEndpoint: { type: String, attribute: 'api-endpoint' },
-			tenantId: { type: String, attribute: 'tenant-id' }
+			apiEndpoint: { type: String, attribute: 'api-endpoint', reflect: true },
+			tenantId: { type: String, attribute: 'tenant-id', reflect: true }
 		};
 	}
 

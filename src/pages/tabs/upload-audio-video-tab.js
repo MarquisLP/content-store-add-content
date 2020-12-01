@@ -17,12 +17,12 @@ const TabStatus = Object.freeze({
 class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((InternalLocalizeMixin(LitElement)))) {
 	static get properties() {
 		return {
-			tabStatus: { type: Number },
-			contentTitle: { type: String },
-			errorMessage: { type: String },
-			fileName: { type: String },
-			fileSize: { type: Number },
-			fileType: { type: String },
+			_tabStatus: { type: Number, attribute: false },
+			_contentTitle: { type: String, attribute: false },
+			_errorMessage: { type: String, attribute: false },
+			_fileName: { type: String, attribute: false },
+			_fileSize: { type: Number, attribute: false },
+			_fileType: { type: String, attribute: false },
 		};
 	}
 
@@ -62,12 +62,12 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 
 	constructor() {
 		super();
-		this.tabStatus = TabStatus.PROMPT;
-		this.contentTitle = '';
-		this.errorMessage = '';
-		this.fileName = '';
-		this.fileSize = 0;
-		this.fileType = '';
+		this._tabStatus = TabStatus.PROMPT;
+		this._contentTitle = '';
+		this._errorMessage = '';
+		this._fileName = '';
+		this._fileSize = 0;
+		this._fileType = '';
 
 		this.reactToUploadError = this.reactToUploadError.bind(this);
 		this.reactToUploadSuccess = this.reactToUploadSuccess.bind(this);
@@ -86,18 +86,18 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 
 	render() {
 		let tabContent;
-		switch (this.tabStatus) {
+		switch (this._tabStatus) {
 			case TabStatus.PROMPT:
 				tabContent = html`
 					<content-file-drop
 						id="prompt-with-file-drop-enabled"
-						error-message=${this.errorMessage}
+						error-message=${this._errorMessage}
 						enable-file-drop
 						@stage-file-for-upload=${this.onStageFileForUpload}
 						@upload-error=${this.onUploadError}></content-file-drop>
 					<content-file-drop
 						id="prompt-with-file-drop-disabled"
-						error-message=${this.errorMessage}
+						error-message=${this._errorMessage}
 						@stage-file-for-upload=${this.onStageFileForUpload}
 						@upload-error=${this.onUploadError}></content-file-drop>
 					`;
@@ -105,10 +105,10 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 			case TabStatus.CONFIRMATION:
 				tabContent = html`
 					<upload-confirmation
-						content-title=${this.contentTitle}
-						file-name=${this.fileName}
-						file-size=${this.fileSize}
-						file-type=${this.fileType}
+						content-title=${this._contentTitle}
+						file-name=${this._fileName}
+						file-size=${this._fileSize}
+						file-type=${this._fileType}
 						@change-content-title=${this.onChangeContentTitle}
 						@discard-staged-file=${this.onDiscardStagedFile}></upload-confirmation>
 					`;
@@ -116,7 +116,7 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 			case TabStatus.UPLOADING:
 				tabContent = html`
 					<upload-progress-indicator
-						file-name=${this.fileName}
+						file-name=${this._fileName}
 						upload-progress=${this.uploader.uploadProgress}></upload-progress-indicator>
 				`;
 		}
@@ -129,7 +129,7 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 				<d2l-button
 					primary
 					description=${this.localize('addSelectedContentToCourse')}
-					?disabled=${(this.tabStatus !== TabStatus.CONFIRMATION) || !this.contentTitle}
+					?disabled=${(this._tabStatus !== TabStatus.CONFIRMATION) || !this._contentTitle}
 					@click=${this.onSaveClick}
 					>${this.localize('save')}</d2l-button>
 				<d2l-button
@@ -141,10 +141,10 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 	}
 
 	onCancelClick() {
-		if (this.tabStatus === TabStatus.UPLOADING) {
+		if (this._tabStatus === TabStatus.UPLOADING) {
 			this.uploader.cancelUpload()
 				.catch(() => {
-					this.errorMessage = this.localize('workerErrorCancelUploadFailed');
+					this._errorMessage = this.localize('workerErrorCancelUploadFailed');
 				})
 				.finally(() => {
 					this.uploader.reset();
@@ -159,52 +159,52 @@ class UploadAudioVideoTab extends MobxReactionUpdate(DependencyRequester((Intern
 	}
 
 	onChangeContentTitle(event) {
-		this.contentTitle = event.detail.contentTitle;
+		this._contentTitle = event.detail.contentTitle;
 	}
 
 	onDiscardStagedFile() {
 		this.file = undefined;
-		this.fileName = '';
-		this.fileSize = 0;
-		this.fileType = '';
-		this.contentTitle = '';
-		this.tabStatus = TabStatus.PROMPT;
+		this._fileName = '';
+		this._fileSize = 0;
+		this._fileType = '';
+		this._contentTitle = '';
+		this._tabStatus = TabStatus.PROMPT;
 	}
 
 	onSaveClick() {
-		this.tabStatus = TabStatus.UPLOADING;
-		this.uploader.uploadFile(this.file, this.contentTitle);
+		this._tabStatus = TabStatus.UPLOADING;
+		this.uploader.uploadFile(this.file, this._contentTitle);
 	}
 
 	onStageFileForUpload(event) {
 		this.file = event.detail.file;
-		this.fileName = event.detail.file.name;
-		this.fileSize = event.detail.file.size;
-		this.fileType = event.detail.file.type;
-		this.contentTitle = this.fileName.substring(0, this.fileName.lastIndexOf('.'));
-		this.tabStatus = TabStatus.CONFIRMATION;
-		this.errorMessage = '';
+		this._fileName = event.detail.file.name;
+		this._fileSize = event.detail.file.size;
+		this._fileType = event.detail.file.type;
+		this._contentTitle = this._fileName.substring(0, this._fileName.lastIndexOf('.'));
+		this._tabStatus = TabStatus.CONFIRMATION;
+		this._errorMessage = '';
 	}
 
 	onUploadError(event) {
-		this.errorMessage = event.detail.message;
+		this._errorMessage = event.detail.message;
 		this.file = undefined;
-		this.fileName = '';
-		this.fileSize = 0;
-		this.fileType = '';
-		this.contentTitle = '';
-		this.tabStatus = TabStatus.PROMPT;
+		this._fileName = '';
+		this._fileSize = 0;
+		this._fileType = '';
+		this._contentTitle = '';
+		this._tabStatus = TabStatus.PROMPT;
 	}
 
 	reactToUploadError(error) {
-		this.errorMessage = this.localize(error);
+		this._errorMessage = this.localize(error);
 		this.uploader.reset();
 		this.file = undefined;
-		this.fileName = '';
-		this.fileSize = 0;
-		this.fileType = '';
-		this.contentTitle = '';
-		this.tabStatus = TabStatus.PROMPT;
+		this._fileName = '';
+		this._fileSize = 0;
+		this._fileType = '';
+		this._contentTitle = '';
+		this._tabStatus = TabStatus.PROMPT;
 	}
 
 	reactToUploadSuccess(d2lrn) {

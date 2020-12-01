@@ -6,8 +6,8 @@ import { InternalLocalizeMixin } from '../../mixins/internal-localize-mixin';
 class UploadProgressIndicator extends InternalLocalizeMixin(LitElement) {
 	static get properties() {
 		return {
-			fileName: { type: String, attribute: 'file-name' },
-			uploadProgress: { type: Number, attribute: 'upload-progress' }
+			fileName: { type: String, attribute: 'file-name', reflect: true },
+			uploadProgress: { type: Number, attribute: 'upload-progress', reflect: true }
 		};
 	}
 
