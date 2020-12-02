@@ -47,8 +47,15 @@ export default class ContentServiceClient {
 	}) {
 		const headers = new Headers();
 
-		// This endpoint is typically polled over and over for new results, so we don't want the user's browser to cache the response.
-		headers.append('pragma', 'no-cache');
+		/* The global d2l-fetch instance defined by BSI injects d2l-fetch-simple-cache as a middleware.
+		 * This middleware causes the browser to return cached responses for 2 minutes, regardless of whether
+		 * the origin server (e.g. Content Service) sets 'cache-control: must-revalidate, max-age=0'  in the response.
+		 *
+		 * We don't want this behaviour when polling the progress endpoint, as it results in stale progress data.
+		 *
+		 * According to d2l-fetch-simple-cache's documentation, this behaviour can be disabled by including a
+		 * 'cache-control: no-cache' header in the request.
+		 */
 		headers.append('cache-control', 'no-cache');
 
 		return this._fetch({
